@@ -105,5 +105,112 @@
         }
       ]
     }
+  },
+  {
+    "clip_id": "1.mp4",
+    "label": "Normal",
+    "justification": {}
+  },
+  {
+    "clip_id": "2.mp4",
+    "label": "Normal",
+    "justification": {}
+  },
+  {
+    "clip_id": "3.mp4",
+    "label": "Normal",
+    "justification": {}
+  },
+  {
+    "clip_id": "4.mp4",
+    "label": "Crime",
+    "justification": {
+      "13": [
+        {
+          "frame": 189,
+          "max_val": 27.3
+        },
+        {
+          "frame": 200,
+          "max_val": 36.8
+        },
+        {
+          "frame": 245,
+          "max_val": 38.7
+        },
+        {
+          "frame": 247,
+          "max_val": 25.5
+        },
+        {
+          "frame": 248,
+          "max_val": 31.5
+        },
+        {
+          "frame": 249,
+          "max_val": 28.8
+        },
+        {
+          "frame": 251,
+          "max_val": 24.5
+        },
+        {
+          "frame": 256,
+          "max_val": 36.6
+        },
+        {
+          "frame": 650,
+          "max_val": 26.4
+        },
+        {
+          "frame": 656,
+          "max_val": 39.9
+        },
+        {
+          "frame": 664,
+          "max_val": 32.1
+        },
+        {
+          "frame": 665,
+          "max_val": 29.0
+        },
+        {
+          "frame": 666,
+          "max_val": 34.3
+        },
+        {
+          "frame": 667,
+          "max_val": 27.1
+        },
+        {
+          "frame": 678,
+          "max_val": 34.7
+        },
+        {
+          "frame": 679,
+          "max_val": 47.5
+        },
+        {
+          "frame": 685,
+          "max_val": 24.6
+        },
+        {
+          "frame": 687,
+          "max_val": 27.3
+        },
+        {
+          "frame": 689,
+          "max_val": 35.8
+        },
+        {
+          "frame": 690,
+          "max_val": 38.2
+        },
+        {
+          "frame": 702,
+          "max_val": 24.9
+        }
+      ]
+    }
   }
 ]
