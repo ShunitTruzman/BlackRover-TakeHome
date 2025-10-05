@@ -54,14 +54,14 @@ Run the pipeline on all videos in `./videos`:
 python main.py     --video_dir ./videos     --output_dir ./results     --json_globalID PersonCatalogue.json     --json_labelling SceneLabelling.json     --sim_thresh 0.65     --momentum 0.85     --max_thres 24     --min_frames 5
 ```
 
-For each video the pipeline will produce:
+For each video, the pipeline will produce:
 - A processed video with **Global IDs** overlaid  
 - Saved **suspicious frames** (e.g., abrupt motion)  
 - Updated **JSON reports** for Global IDs and Scene Labels  
 
 ---
 
-## 💾 Example Output
+## 💾 Example of Output
 
 After running the pipeline:
 ```
