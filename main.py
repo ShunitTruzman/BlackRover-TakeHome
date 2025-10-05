@@ -13,6 +13,7 @@ import torchvision.transforms as TV
 # Define GPU if available
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
+
 # ========================================
 #  Global Identity Tracker
 # ========================================
@@ -92,6 +93,7 @@ class GlobalIdentityTracker:
         updated /= (np.linalg.norm(updated) + 1e-6)
         self.global_embeddings[gid] = updated
 
+
 # ========================================
 # ReID Model Setup
 # ========================================
@@ -102,6 +104,7 @@ reid_model = models.build_model(name="osnet_ibn_x1_0", num_classes=1000, pretrai
 reid_transform = TV.Compose(
     [TV.ToPILImage(), TV.Resize((256, 128)), TV.ToTensor(), TV.Normalize(mean=[0.485, 0.456, 0.406],
                                                                          std=[0.229, 0.224, 0.225]), ])
+
 
 @torch.no_grad()
 def extract_reid_embedding(frame_bgr, xyxy):
@@ -127,6 +130,7 @@ def extract_reid_embedding(frame_bgr, xyxy):
     embedding /= (np.linalg.norm(embedding) + 1e-6)
     return embedding
 
+
 # ========================================
 # Utility Functions
 # ========================================
@@ -142,6 +146,7 @@ def compute_optical_flow_magnitude(prev_gray, gray, roi=None):
     mag, _ = cv2.cartToPolar(flow[..., 0], flow[..., 1])
     return float(np.max(mag))
 
+
 def update_identity_catalogue(catalogue_path, gid, video_name, frame_idx):
     """Updates the identity catalogue JSON with (GID → video/frame range)."""
     if os.path.exists(catalogue_path):
@@ -150,7 +155,7 @@ def update_identity_catalogue(catalogue_path, gid, video_name, frame_idx):
     else:
         data = {}
 
-    gid_str = str(gid)
+    gid_str = f"GID:{gid}"
     if gid_str in data:
         clips = data[gid_str].setdefault("clip_id & frame ranges", [])
         exists = any(c[0] == video_name for c in clips)
@@ -165,10 +170,11 @@ def update_identity_catalogue(catalogue_path, gid, video_name, frame_idx):
     with open(catalogue_path, "w") as f:
         json.dump(data, f, indent=1)
 
+
 def mark_suspicious_activity(max_val, gid, frame_idx, id_catalogue_dict, roi, frame_susp, output_path, video_name):
     """Marks a suspicious GID on the frame and saves an annotated image."""
     x1, y1, x2, y2 = roi
-    id_catalogue_dict.setdefault(str(gid), []).append({"frame": frame_idx, "max_val": round(max_val, 1)})
+    id_catalogue_dict.setdefault(f"GID:{gid}", []).append({"frame": frame_idx, "max_val": round(max_val, 1)})
     label = f"GID {gid} | Max={max_val:.1f}"
 
     cv2.rectangle(frame_susp, (x1, y1), (x2, y2), (0, 0, 255), 2)
@@ -178,17 +184,19 @@ def mark_suspicious_activity(max_val, gid, frame_idx, id_catalogue_dict, roi, fr
     os.makedirs(out_path_susp, exist_ok=True)
     cv2.imwrite(f"{out_path_susp}/frame_no{frame_idx}_GID{gid}_max{max_val:.2f}.jpg", frame_susp)
 
+
 def saves_suspicious_results(id_catalogue_dict, video_name, output_path, json_labelling, min_frames):
     """Filters short detections and saves suspicious activity metadata."""
     suspicious = False
 
     for gid, frames in list(id_catalogue_dict.items()):
         if len(frames) < min_frames:
-            id_catalogue_dict.pop(str(gid))
+            gid_value = int(gid.split(":")[1])
+            id_catalogue_dict.pop(gid)
             out_path_susp = os.path.join(f"{output_path}/suspicious_frames", f"{video_name}")
 
             for fname in os.listdir(out_path_susp):
-                if f"GID{gid}_" in fname:
+                if f"GID{gid_value}_" in fname:
                     os.remove(os.path.join(out_path_susp, fname))
             if not os.listdir(out_path_susp):
                 os.rmdir(out_path_susp)
@@ -211,6 +219,7 @@ def saves_suspicious_results(id_catalogue_dict, video_name, output_path, json_la
     data.append(data_entry)
     with open(json_labelling, "w") as f:
         json.dump(data, f, indent=2)
+
 
 # ========================================
 # Video Processing Pipeline
@@ -291,6 +300,8 @@ def process_video(video_path, video_name, output_path, json_globalID, max_thres)
     writer.release()
     return id_catalogue_dict
 
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Person Re-Identification & Scene Classification Pipeline")
@@ -298,7 +309,7 @@ if __name__ == "__main__":
     parser.add_argument("--video_dir", type=str, default="./videos", help="Directory containing input videos")
     parser.add_argument("--output_dir", type=str, default="./results",
                         help="Directory to save videos with global ID and suspicious frames")
-    parser.add_argument("--json_globalID", type=str, default="PersonCatalogue.json",
+    parser.add_argument("--json_globalID", type=str, default="PersonIDCatalogue.json",
                         help="Path to global identity catalogue JSON file")
     parser.add_argument("--json_labelling", type=str, default="SceneLabelling.json",
                         help="Path to scene labelling JSON output file")

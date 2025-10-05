@@ -51,7 +51,7 @@ pip install -r requirements.txt
 Run the pipeline on all videos in `./videos`:
 
 ```bash
-python main.py     --video_dir ./videos     --output_dir ./results     --json_globalID PersonCatalogue.json     --json_labelling SceneLabelling.json     --sim_thresh 0.65     --momentum 0.85     --max_thres 24     --min_frames 5
+python main.py     --video_dir ./videos     --output_dir ./results     --json_globalID PersonIDCatalogue.json     --json_labelling SceneLabelling.json     --sim_thresh 0.65     --momentum 0.85     --max_thres 24     --min_frames 5
 ```
 
 For each video, the pipeline will produce:
@@ -81,7 +81,7 @@ results/
     "clip_id": "video1.mp4",
     "label": "Crime",
     "justification": {
-      "4": [
+      "GID:4": [
         {"frame": 200, "max_val": 25.3},
         {"frame": 201, "max_val": 28.1}
       ]
