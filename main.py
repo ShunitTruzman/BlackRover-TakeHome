@@ -1,4 +1,3 @@
-
 import os
 import cv2
 import json
@@ -13,7 +12,6 @@ import torchvision.transforms as TV
 
 # Define GPU if available
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-
 
 # ========================================
 #  Global Identity Tracker
@@ -94,7 +92,6 @@ class GlobalIdentityTracker:
         updated /= (np.linalg.norm(updated) + 1e-6)
         self.global_embeddings[gid] = updated
 
-
 # ========================================
 # ReID Model Setup
 # ========================================
@@ -105,7 +102,6 @@ reid_model = models.build_model(name="osnet_ibn_x1_0", num_classes=1000, pretrai
 reid_transform = TV.Compose(
     [TV.ToPILImage(), TV.Resize((256, 128)), TV.ToTensor(), TV.Normalize(mean=[0.485, 0.456, 0.406],
                                                                          std=[0.229, 0.224, 0.225]), ])
-
 
 @torch.no_grad()
 def extract_reid_embedding(frame_bgr, xyxy):
@@ -131,7 +127,6 @@ def extract_reid_embedding(frame_bgr, xyxy):
     embedding /= (np.linalg.norm(embedding) + 1e-6)
     return embedding
 
-
 # ========================================
 # Utility Functions
 # ========================================
@@ -146,7 +141,6 @@ def compute_optical_flow_magnitude(prev_gray, gray, roi=None):
     flow = cv2.calcOpticalFlowFarneback(a, b, None, 0.5, 3, 15, 3, 5, 1.2, 0)
     mag, _ = cv2.cartToPolar(flow[..., 0], flow[..., 1])
     return float(np.max(mag))
-
 
 def update_identity_catalogue(catalogue_path, gid, video_name, frame_idx):
     """Updates the identity catalogue JSON with (GID → video/frame range)."""
@@ -171,7 +165,6 @@ def update_identity_catalogue(catalogue_path, gid, video_name, frame_idx):
     with open(catalogue_path, "w") as f:
         json.dump(data, f, indent=1)
 
-
 def mark_suspicious_activity(max_val, gid, frame_idx, id_catalogue_dict, roi, frame_susp, output_path, video_name):
     """Marks a suspicious GID on the frame and saves an annotated image."""
     x1, y1, x2, y2 = roi
@@ -184,7 +177,6 @@ def mark_suspicious_activity(max_val, gid, frame_idx, id_catalogue_dict, roi, fr
     out_path_susp = os.path.join(f"{output_path}/suspicious_frames", f"{video_name}")
     os.makedirs(out_path_susp, exist_ok=True)
     cv2.imwrite(f"{out_path_susp}/frame_no{frame_idx}_GID{gid}_max{max_val:.2f}.jpg", frame_susp)
-
 
 def saves_suspicious_results(id_catalogue_dict, video_name, output_path, json_labelling, min_frames):
     """Filters short detections and saves suspicious activity metadata."""
@@ -219,7 +211,6 @@ def saves_suspicious_results(id_catalogue_dict, video_name, output_path, json_la
     data.append(data_entry)
     with open(json_labelling, "w") as f:
         json.dump(data, f, indent=2)
-
 
 # ========================================
 # Video Processing Pipeline

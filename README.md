@@ -1,9 +1,9 @@
 # 🧠 Person Re-Identification & Scene Classification Pipeline
 
 This repository implements a **multi-video pipeline** for:
-- Person **Re-Identification (ReID)** across different videos  
-- **Global ID assignment** using embedding similarity and Hungarian matching  
-- **Suspicious activity detection** based on optical flow magnitude  
+- Person **Re-Identification (ReID)** across different videos.  
+- **Global ID assignment** using embedding similarity and Hungarian matching.
+- **Suspicious activity detection** based on optical flow magnitude. 
 - Scene-level classification: ***Crime* vs *Normal*** on detected motion.
 
 ---
@@ -54,7 +54,7 @@ Run the pipeline on all videos in `./videos`:
 python main.py     --video_dir ./videos     --output_dir ./results     --json_globalID PersonCatalogue.json     --json_labelling SceneLabelling.json     --sim_thresh 0.65     --momentum 0.85     --max_thres 24     --min_frames 5
 ```
 
-Each video will produce:
+For each video the pipeline will produce:
 - A processed video with **Global IDs** overlaid  
 - Saved **suspicious frames** (e.g., abrupt motion)  
 - Updated **JSON reports** for Global IDs and Scene Labels  
